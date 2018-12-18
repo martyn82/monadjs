@@ -1,0 +1,14 @@
+{
+  "name": "monadjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_PATH='./src/main/js:./src/test/js:./node_modules' jest"
+  },
+  "author": "martyn82",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^23.6.0"
+  }
+}
