@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_PATH='./src/main/js:./src/test/js:./node_modules' jest"
+    "test": "NODE_PATH='./src/main/js:./src/test/js:./node_modules' jest --verbose",
+    "skipped": "NODE_PATH='./src/main/js:./src/test/js:./node_modules' jest --verbose --reporters jest-skipped-reporter"
   },
   "author": "martyn82",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^23.6.0"
+    "jest": "^23.6.0",
+    "jest-skipped-reporter": "0.0.4"
   }
 }
