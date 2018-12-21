@@ -89,6 +89,18 @@ describe('Future', () => {
     return future.promise;
   });
 
+  test('value of a Future stays in tact if onComplete handler is registered', done => {
+    expect.assertions(1);
+
+    const future = Future(() => 'foo');
+    future.onComplete(result => {
+      expect(future.value).toEqual(Some(Success('foo')));
+      done();
+    });
+
+    return future.promise;
+  });
+
   test('value of a failed Future is Some(Failure())', done => {
     const future = Future(() => { throw new Error('foo'); });
     future.onComplete(() => {

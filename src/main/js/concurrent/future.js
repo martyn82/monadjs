@@ -8,22 +8,26 @@ const Future = (f) => {
 Future.apply = (f) => {
   class Future {
     constructor(promise) {
+      this.value = None;
       this.promise = promise;
       this.isCompleted = false;
-      this.completed = _ => {};
-      this.value = None;
       this.promise.then(
-        result => this.value = Some(result),
-        err => this.value = Some(err)
+        result => {
+          this.isCompleted = true;
+          this.value = Some(result);
+        },
+        err => {
+          this.isCompleted = true;
+          this.value = Some(err);
+        }
       ).catch(_ => _).finally(_ => this.isCompleted = true);
     }
 
     onComplete(f) {
-      this.completed = result => {
-        this.isCompleted = true;
+      let completed = result => {
         f(result);
       };
-      this.promise.then(result => this.completed(result), reason => this.completed(reason));
+      this.promise.then(result => completed(result), reason => completed(reason));
     }
 
     foreach(f) {
