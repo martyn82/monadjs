@@ -5,6 +5,10 @@ const Future = (f) => {
   return Future.apply(f);
 };
 
+Future.successful = (value) => Success(value);
+Future.unit = Future.successful();
+Future.failed = (reason) => Failure(reason);
+
 Future.apply = (f) => {
   class Future {
     constructor(promise) {

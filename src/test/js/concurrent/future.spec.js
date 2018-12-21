@@ -125,4 +125,16 @@ describe('Future', () => {
 
     return f2.promise;
   });
+
+  test('Future.successful returns an immediate successful Future with a boxed value', () => {
+    expect(Future.successful('foo')).toEqual(Success('foo'));
+  });
+
+  test('Future.unit returns an immediate successful Future with undefined', () => {
+    expect(Future.unit).toEqual(Success());
+  });
+
+  test('Future.failed returns an immediate failed Future with a boxed reason', () => {
+    expect(Future.failed(Error('bar'))).toEqual(Failure(Error('bar')));
+  });
 });
