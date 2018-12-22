@@ -1,4 +1,3 @@
-
 const m2 = Math.pow(1000, 2);
 const m3 = Math.pow(1000, 3);
 
@@ -23,6 +22,10 @@ Duration.fromNanos = (nanos) => {
 Duration.apply = (length, unit) => {
   class Duration {
     constructor(length, unit, nanos) {
+      if (typeof length !== 'number') {
+        throw Error('length must be a number');
+      }
+
       this.length = length;
       this.unit = unit;
       this._nanos = nanos;
