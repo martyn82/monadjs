@@ -1,7 +1,7 @@
-const {Future} = require('concurrent/future');
-const {Success, Failure} = require('util/try');
-const {Some, None} = require('util/option');
-const {sleep} = require('concurrent/sleep');
+import {Future} from 'concurrent/future';
+import {Success, Failure} from 'util/try';
+import {Some, None} from 'util/option';
+import sleep from 'concurrent/sleep';
 
 describe('Future', () => {
   test('onComplete is called with the result when the future is complete', done => {

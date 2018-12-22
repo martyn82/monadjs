@@ -1,5 +1,5 @@
-const {Left, Right} = require('util/either');
-const {None, Some} = require('util/option');
+import {Left, Right} from 'util/either';
+import {None, Some} from 'util/option';
 
 describe('Left', () => {
   test('Left.isLeft returns true', () => {

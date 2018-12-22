@@ -1,6 +1,6 @@
-const {Promise} = require('concurrent/promise');
-const {Future} = require('concurrent/future');
-const {Try, Success, Failure} = require('util/try');
+import {Promise} from 'concurrent/promise';
+import {Future} from 'concurrent/future';
+import {Try, Success, Failure} from 'util/try';
 
 describe('Promise', () => {
   test('fromTry returns a successful Future when Try succeeds', () => {
@@ -13,10 +13,12 @@ describe('Promise', () => {
     expect(p).toEqual(Promise(Future.failed(Error('bla'))));
   });
 
-  test('Promise.future retrieves the Future underlying the Promise', () => {
+  test('Promise.future retrieves the Future underlying the Promise (success)', () => {
     const p = Promise.fromTry(Try(() => 'foo'));
     expect(p.future).toEqual(Future(Success('foo')));
   });
+
+  test('Promise.future retrieves the Future underlying the Promise (failed)', pending);
 
   test('isCompleted reflects Promise\'s completion state', done => {
     expect.assertions(3);

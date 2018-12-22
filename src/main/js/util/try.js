@@ -1,5 +1,5 @@
-const {Left, Right} = require('./either');
-const {Some, None} = require('./option');
+import {Left, Right} from 'util/either';
+import {Some, None} from 'util/option';
 
 /* Success */
 const Success = (value) => {
@@ -119,4 +119,4 @@ Try.apply = (f) => {
   }
 };
 
-module.exports = {Try, Success, Failure};
+export {Try, Success, Failure};

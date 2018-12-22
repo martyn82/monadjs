@@ -1,6 +1,6 @@
-const {Left, Right} = require('util/either');
-const {Some, None} = require('util/option');
-const {Try, Success, Failure} = require('util/try');
+import {Left, Right} from 'util/either';
+import {Some, None} from 'util/option';
+import {Try, Success, Failure} from 'util/try';
 
 describe('Try', () => {
   test('Try returns Success if f was successful', () => {

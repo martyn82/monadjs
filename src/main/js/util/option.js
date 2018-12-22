@@ -78,4 +78,4 @@ Option.apply = (value) => {
   }
 };
 
-module.exports = {Option, Some, None};
+export {Option, Some, None};

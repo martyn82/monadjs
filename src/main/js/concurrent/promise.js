@@ -1,5 +1,5 @@
-const {Future} = require('concurrent/future');
-const {Success, Failure} = require('util/try');
+import {Future} from 'concurrent/future';
+import {Success, Failure} from 'util/try';
 
 const _promise = window.Promise;
 
@@ -100,4 +100,4 @@ Promise.apply = () => {
   return new Promise();
 };
 
-module.exports = {Promise};
+export {Promise};

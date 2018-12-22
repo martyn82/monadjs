@@ -1,4 +1,4 @@
-const {Some, None} = require('./option');
+import {Some, None} from './option';
 
 /* Left */
 const Left = (value) => {
@@ -96,4 +96,4 @@ Right.apply = (value) => {
   return new Right(value);
 };
 
-module.exports = {Left, Right};
+export {Left, Right};

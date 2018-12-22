@@ -1,5 +1,5 @@
-const {Some, None} = require('util/option');
-const {Success, Failure} = require('util/try');
+import {Some, None} from 'util/option';
+import {Success, Failure} from 'util/try';
 
 const _promise = window.Promise;
 
@@ -144,4 +144,4 @@ Future.apply = (f) => {
   return _future(f);
 };
 
-module.exports = {Future};
+export {Future};

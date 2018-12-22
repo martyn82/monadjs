@@ -1,4 +1,4 @@
-const {Option, Some, None} = require('util/option');
+import {Option, Some, None} from 'util/option';
 
 describe('Option', () => {
   test('Option(undefined) is equal to None', () => {
