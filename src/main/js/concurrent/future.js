@@ -1,25 +1,6 @@
 const {Some, None} = require('util/option');
 const {Success, Failure} = require('util/try');
 
-/*
-
-        // async function ready(value) {
-        //   function timer(value) {
-        //     return new _promise((resolve, _) => {
-        //       const t = setInterval(value => {
-        //         if (value.value) {
-        //           clearInterval(t);
-        //           resolve(value.value);
-        //         }
-        //       }, 1, value);
-        //     });
-        //   }
-        //   return await timer(value);
-        // }
-        // return await ready(this._value);
-
- */
-
 const _promise = window.Promise;
 
 const Future = (f) => {
@@ -73,40 +54,94 @@ Future.apply = (f) => {
         })
       );
     }
+
+    async ready(duration) {
+      let timer;
+      async function wait(atMost) {
+        function timeout(duration) {
+          return new _promise((_, reject) => {
+            timer = setTimeout(() => {
+              reject(Error('Futures timed out after ' + duration));
+            }, duration);
+          });
+        }
+        return await timeout(atMost);
+      }
+
+      this.onComplete(() => clearTimeout(timer));
+      await _promise.race([this._promise, wait(duration)]);
+
+      return this;
+    }
+
+    async result(duration) {
+      let timer;
+      async function wait(atMost) {
+        function timeout(duration) {
+          return new _promise((_, reject) => {
+            timer = setTimeout(() => {
+              reject(Error('Futures timed out after ' + duration));
+            }, duration);
+          });
+        }
+        return await timeout(atMost);
+      }
+
+      this.onComplete(() => clearTimeout(timer));
+      await _promise.race([this._promise, wait(duration)]);
+      return this.value.map(v => v.get()).getOrElse(undefined);
+    }
   }
 
   let promise;
 
-  switch (f.constructor.name) {
-    case 'AsyncFunction':
-      promise = f();
-      break;
+  const _future = (f) => {
+    switch (f.constructor.name) {
+      case 'AsyncFunction':
+        promise = f().then(v => resolveTry(v, Success.apply),
+                           e => resolveTry(e, Failure.apply)
+        ).catch(e => resolveTry(e, Failure.apply));
+        break;
 
-    case 'Success':
-      promise = new _promise((resolve, _) => {
-        resolve(f());
-      });
-      break;
+      case 'Success':
+        promise = new _promise((resolve, _) => {
+          resolve(f());
+        });
+        break;
 
-    case 'Failure':
-      promise = new _promise((_, reject) => {
-        reject(f());
-      });
-      break;
+      case 'Failure':
+        promise = new _promise((_, reject) => {
+          reject(f());
+        });
+        break;
 
-    default:
-      promise = new _promise((resolve, reject) => {
-        try {
-          const result = f();
-          resolve(Success(result));
-        } catch (e) {
-          reject(Failure(e));
-        }
-      });
-      break;
-  }
+      default:
+        promise = new _promise((resolve, reject) => {
+          try {
+            const result = f();
+            resolve(resolveTry(result, Success.apply));
+          } catch (e) {
+            reject(resolveTry(e, Failure.apply));
+          }
+        });
+        break;
+    }
 
-  return new Future(promise);
+    return new Future(promise);
+
+    function resolveTry(value, f) {
+      switch (value.constructor.name) {
+        case 'Success':
+        case 'Failure':
+          return value;
+
+        default:
+          return f(value);
+      }
+    }
+  };
+
+  return _future(f);
 };
 
 module.exports = {Future};

@@ -18,7 +18,7 @@ describe('Promise', () => {
     expect(p.future).toEqual(Future(Success('foo')));
   });
 
-  test('isCompleted reflects underlying Future\'s isCompleted', done => {
+  test('isCompleted reflects Promise\'s completion state', done => {
     expect.assertions(3);
 
     const p = Promise();

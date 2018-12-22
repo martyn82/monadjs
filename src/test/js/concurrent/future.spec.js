@@ -1,6 +1,7 @@
 const {Future} = require('concurrent/future');
 const {Success, Failure} = require('util/try');
 const {Some, None} = require('util/option');
+const {sleep} = require('concurrent/sleep');
 
 describe('Future', () => {
   test('onComplete is called with the result when the future is complete', done => {
@@ -122,6 +123,88 @@ describe('Future', () => {
     });
 
     return f2._promise;
+  });
+
+  test('ready awaits the completed state of the Future and reflects it if successful', async done => {
+    const f = Future(async () => {
+      await sleep(10);
+      return 'foo';
+    });
+
+    (await f.ready(11)).onComplete(result => {
+      expect(result).toEqual(Success('foo'));
+      done();
+    });
+  });
+
+  test('ready awaits the completed state of the Future and reflects it if failed', async done => {
+    const f = Future(async () => {
+      await sleep(10);
+      throw Error('foo');
+    });
+
+    (await f.ready(11)).onComplete(result => {
+      expect(result).toEqual(Failure(Error('foo')));
+      done();
+    });
+  });
+
+  test('ready times out if maximum duration has exceeded', async () => {
+    expect.assertions(1);
+
+    const f = Future(async () => {
+      await sleep(100);
+      return 'foo';
+    });
+
+    const patience = 10;
+
+    try {
+      await f.ready(patience);
+    } catch (e) {
+      expect(e).toEqual(Error('Futures timed out after ' + patience));
+    }
+  });
+
+  test('result awaits the completed state of the Future and returns the result if successful', async () => {
+    const f = Future(async () => {
+      await sleep(10);
+      return 'foo';
+    });
+
+    expect(await f.result(100)).toBe('foo');
+  });
+
+  test('result awaits the completed state of the Future and throws an error if failed', async () => {
+    expect.assertions(1);
+
+    const f = Future(async () => {
+      await sleep(10);
+      throw Error('foo');
+    });
+
+    try {
+      await f.result(100);
+    } catch (e) {
+      expect(e).toEqual(Error('foo'));
+    }
+  });
+
+  test('result times out if maximum duration has exceeded', async () => {
+    expect.assertions(1);
+
+    const f = Future(async () => {
+      await sleep(100);
+      return 'foo';
+    });
+
+    const patience = 10;
+
+    try {
+      await f.result(patience);
+    } catch (e) {
+      expect(e).toEqual(Error('Futures timed out after ' + patience));
+    }
   });
 
   test('Future.successful returns an immediate successful Future with a boxed value', () => {
