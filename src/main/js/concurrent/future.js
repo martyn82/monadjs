@@ -1,9 +1,8 @@
-import {Some, None} from 'util/option';
-import {Success, Failure} from 'util/try';
+import {Success, Failure, Some, None} from 'utils';
 
 const _promise = window.Promise;
 
-const Future = (f) => {
+export const Future = (f) => {
   if (typeof f === 'undefined') {
     return;
   }
@@ -143,5 +142,3 @@ Future.apply = (f) => {
 
   return _future(f);
 };
-
-export {Future};

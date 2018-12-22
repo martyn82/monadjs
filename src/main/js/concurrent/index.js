@@ -1,5 +1,3 @@
-import Future from 'concurrent/future';
-import Promise from 'concurrent/promise';
-import sleep from 'concurrent/sleep';
-
-export {Future, Promise, sleep};
+export {Future} from './future';
+export {Promise} from './promise';
+export {default as sleep} from './sleep';

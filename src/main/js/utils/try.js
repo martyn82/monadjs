@@ -1,8 +1,8 @@
-import {Left, Right} from 'util/either';
-import {Some, None} from 'util/option';
+import {Left, Right} from './either';
+import {Some, None} from './option';
 
 /* Success */
-const Success = (value) => {
+export const Success = (value) => {
   return Success.apply(value);
 };
 
@@ -55,7 +55,7 @@ Success.apply = (value) => {
 };
 
 /* Failure */
-const Failure = (error) => {
+export const Failure = (error) => {
   return Failure.apply(error);
 };
 
@@ -106,7 +106,7 @@ Failure.apply = (error) => {
 };
 
 /* Try */
-const Try = (f) => {
+export const Try = (f) => {
   return Try.apply(f);
 };
 
@@ -118,5 +118,3 @@ Try.apply = (f) => {
     return Failure(e);
   }
 };
-
-export {Try, Success, Failure};

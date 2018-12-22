@@ -1,6 +1,4 @@
-import {Left, Right} from 'util/either';
-import {Some, None} from 'util/option';
-import {Try, Success, Failure} from 'util/try';
+import {Some, None, Left, Right, Try, Success, Failure} from 'utils';
 
 describe('Try', () => {
   test('Try returns Success if f was successful', () => {

@@ -1,5 +1,4 @@
-import {Left, Right} from 'util/either';
-import {None, Some} from 'util/option';
+import {Some, None, Left, Right} from 'utils';
 
 describe('Left', () => {
   test('Left.isLeft returns true', () => {

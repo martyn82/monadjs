@@ -1,4 +1,4 @@
-import {Option, Some, None} from 'util/option';
+import {Option, Some, None} from 'utils';
 
 describe('Option', () => {
   test('Option(undefined) is equal to None', () => {

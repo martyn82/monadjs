@@ -1,7 +1,5 @@
-import {Future} from 'concurrent/future';
-import {Success, Failure} from 'util/try';
-import {Some, None} from 'util/option';
-import sleep from 'concurrent/sleep';
+import {sleep, Future} from 'concurrent';
+import {Success, Failure, Some, None} from 'utils';
 
 describe('Future', () => {
   test('onComplete is called with the result when the future is complete', done => {

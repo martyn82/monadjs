@@ -1,7 +1,7 @@
 
 /* None */
 
-const None = {
+export const None = {
   isEmpty: true,
   nonEmpty: false,
 
@@ -28,7 +28,7 @@ const None = {
 
 /* Some */
 
-const Some = (value) => {
+export const Some = (value) => {
   return Some.apply(value);
 };
 
@@ -66,7 +66,7 @@ Some.apply = (value) => {
 
 /* Option */
 
-const Option = (value) => {
+export const Option = (value) => {
   return Option.apply(value);
 };
 
@@ -77,5 +77,3 @@ Option.apply = (value) => {
     return Some(value);
   }
 };
-
-export {Option, Some, None};

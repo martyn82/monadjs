@@ -1,9 +1,9 @@
 import {Future} from 'concurrent/future';
-import {Success, Failure} from 'util/try';
+import {Success, Failure} from 'utils';
 
 const _promise = window.Promise;
 
-const Promise = () => {
+export const Promise = () => {
   return Promise.apply();
 };
 
@@ -99,5 +99,3 @@ Promise.apply = () => {
 
   return new Promise();
 };
-
-export {Promise};

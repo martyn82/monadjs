@@ -1,7 +1,7 @@
 import {Some, None} from './option';
 
 /* Left */
-const Left = (value) => {
+export const Left = (value) => {
   return Left.apply(value);
 };
 
@@ -48,7 +48,7 @@ Left.apply = (value) => {
 };
 
 /* Right */
-const Right = (value) => {
+export const Right = (value) => {
   return Right.apply(value);
 };
 
@@ -95,5 +95,3 @@ Right.apply = (value) => {
 
   return new Right(value);
 };
-
-export {Left, Right};
