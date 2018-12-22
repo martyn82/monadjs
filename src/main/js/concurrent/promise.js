@@ -24,27 +24,28 @@ Promise.failed = (reason) => Promise.fromTry(Failure(reason));
 Promise.apply = () => {
   class Promise {
     constructor() {
-      this._value = {value: undefined};
-      this.future = Future(async () => {
-        async function ready(value) {
-          function timer(value) {
-            return new _promise((resolve, _) => {
-              const t = setInterval(value => {
-                if (value.value) {
-                  clearInterval(t);
-                  resolve(value.value);
-                }
-              }, 1, value);
-            });
-          }
-          return await timer(value);
-        }
-        return await ready(this._value);
+      this._data = {value: undefined};
+      this._proxy = this._data;
+      this.future = Future( async () => {
+        return new _promise((resolve, _) => {
+          this._proxy = new Proxy(this._data, {
+            set: (obj, prop, val) => {
+              obj[prop] = val;
+              this._isCompleted = true;
+              resolve(val);
+              return true;
+            },
+            get: (obj, prop) => {
+              return obj[prop];
+            }
+          });
+        });
       });
+      this._isCompleted = this.future.isCompleted;
     }
 
     isCompleted() {
-      return this.future.isCompleted;
+      return this._isCompleted;
     }
 
     complete(value) {
@@ -59,10 +60,8 @@ Promise.apply = () => {
       if (this.isCompleted()) {
         return false;
       } else {
-        if (typeof value.constructor !== 'undefined' && value.constructor.name === 'Failure') {
-          return false;
-        } else if (value !== null) {
-          this._value.value = value;
+        if (value !== null) {
+          this._proxy.value = value;
           return true;
         } else {
           return false;
@@ -78,11 +77,24 @@ Promise.apply = () => {
       return this.tryComplete(Success(value));
     }
 
-    failure(reason) {}
-    tryFailure(reason) {}
+    failure(reason) {
+      return this.complete(Failure(reason));
+    }
 
-    completeWith(future) {}
-    tryCompleteWith(future) {}
+    tryFailure(reason) {
+      return this.tryComplete(Failure(reason));
+    }
+
+    completeWith(future) {
+      return this.tryCompleteWith(future);
+    }
+
+    tryCompleteWith(future) {
+      if (future !== this.future) {
+        future.onComplete(result => this.tryComplete(result));
+      }
+      return this;
+    }
   }
 
   return new Promise();

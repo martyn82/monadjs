@@ -1,6 +1,25 @@
 const {Some, None} = require('util/option');
 const {Success, Failure} = require('util/try');
 
+/*
+
+        // async function ready(value) {
+        //   function timer(value) {
+        //     return new _promise((resolve, _) => {
+        //       const t = setInterval(value => {
+        //         if (value.value) {
+        //           clearInterval(t);
+        //           resolve(value.value);
+        //         }
+        //       }, 1, value);
+        //     });
+        //   }
+        //   return await timer(value);
+        // }
+        // return await ready(this._value);
+
+ */
+
 const _promise = window.Promise;
 
 const Future = (f) => {
@@ -30,7 +49,7 @@ Future.apply = (f) => {
           this.isCompleted = true;
           this.value = Some(err);
         }
-      ).catch(_ => _).finally(_ => this.isCompleted = true);
+      ).catch(() => {}).finally(() => this.isCompleted = true);
     }
 
     onComplete(f) {
@@ -46,7 +65,7 @@ Future.apply = (f) => {
 
     map(f) {
       return new Future(
-        new Promise((resolve, reject) => {
+        new _promise((resolve, reject) => {
           this._promise.then(
             result => {resolve(Success(f(result.get())))},
             error => {reject(Failure(error))}
