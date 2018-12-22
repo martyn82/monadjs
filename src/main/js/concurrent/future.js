@@ -1,21 +1,27 @@
 const {Some, None} = require('util/option');
 const {Success, Failure} = require('util/try');
 
+const _promise = window.Promise;
+
 const Future = (f) => {
+  if (typeof f === 'undefined') {
+    return;
+  }
+
   return Future.apply(f);
 };
 
-Future.successful = (value) => Success(value);
-Future.unit = Future.successful();
-Future.failed = (reason) => Failure(reason);
+Future.successful = (value) => Future.apply(Success(value));
+Future.undefined = () => Future.apply(Success());
+Future.failed = (reason) => Future.apply(Failure(reason));
 
 Future.apply = (f) => {
   class Future {
     constructor(promise) {
       this.value = None;
-      this.promise = promise;
       this.isCompleted = false;
-      this.promise.then(
+      this._promise = promise;
+      this._promise.then(
         result => {
           this.isCompleted = true;
           this.value = Some(result);
@@ -31,17 +37,17 @@ Future.apply = (f) => {
       let completed = result => {
         f(result);
       };
-      this.promise.then(result => completed(result), reason => completed(reason));
+      this._promise.then(result => completed(result), reason => completed(reason));
     }
 
     foreach(f) {
-      this.promise.then(result => { f(result.get()); });
+      this._promise.then(result => { f(result.get()); });
     }
 
     map(f) {
       return new Future(
         new Promise((resolve, reject) => {
-          this.promise.then(
+          this._promise.then(
             result => {resolve(Success(f(result.get())))},
             error => {reject(Failure(error))}
           );
@@ -50,14 +56,36 @@ Future.apply = (f) => {
     }
   }
 
-  const promise = (f.constructor.name === 'AsyncFunction') ? f() : new Promise((resolve, reject) => {
-    try {
-      const result = f();
-      resolve(Success(result));
-    } catch (e) {
-      reject(Failure(e));
-    }
-  });
+  let promise;
+
+  switch (f.constructor.name) {
+    case 'AsyncFunction':
+      promise = f();
+      break;
+
+    case 'Success':
+      promise = new _promise((resolve, _) => {
+        resolve(f());
+      });
+      break;
+
+    case 'Failure':
+      promise = new _promise((_, reject) => {
+        reject(f());
+      });
+      break;
+
+    default:
+      promise = new _promise((resolve, reject) => {
+        try {
+          const result = f();
+          resolve(Success(result));
+        } catch (e) {
+          reject(Failure(e));
+        }
+      });
+      break;
+  }
 
   return new Future(promise);
 };

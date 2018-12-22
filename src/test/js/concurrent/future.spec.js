@@ -12,7 +12,7 @@ describe('Future', () => {
       done();
     });
 
-    return future.promise;
+    return future._promise;
   });
 
   test('onComplete is called with the error when the future is complete', done => {
@@ -24,7 +24,7 @@ describe('Future', () => {
       done();
     });
 
-    return future.promise;
+    return future._promise;
   });
 
   test('onComplete can be used in conjunction with other callbacks', done => {
@@ -45,7 +45,7 @@ describe('Future', () => {
       if (handles === 2) done();
     });
 
-    return future.promise;
+    return future._promise;
   });
 
   test('foreach is called with the unboxed Success value', done => {
@@ -57,7 +57,7 @@ describe('Future', () => {
       done();
     });
 
-    return future.promise;
+    return future._promise;
   });
 
   test('isCompleted indicates whether the future is completed', done => {
@@ -70,8 +70,6 @@ describe('Future', () => {
       expect(future.isCompleted).toBe(true);
       done();
     });
-
-    return future.promise;
   });
 
   test('value of a not completed Future is None', () => {
@@ -86,7 +84,7 @@ describe('Future', () => {
       done();
     });
 
-    return future.promise;
+    return future._promise;
   });
 
   test('value of a Future stays in tact if onComplete handler is registered', done => {
@@ -98,7 +96,7 @@ describe('Future', () => {
       done();
     });
 
-    return future.promise;
+    return future._promise;
   });
 
   test('value of a failed Future is Some(Failure())', done => {
@@ -108,7 +106,7 @@ describe('Future', () => {
       done();
     });
 
-    return future.promise;
+    return future._promise;
   });
 
   test('map will create a new Future by applying f to the successful result', done => {
@@ -123,18 +121,18 @@ describe('Future', () => {
       done();
     });
 
-    return f2.promise;
+    return f2._promise;
   });
 
   test('Future.successful returns an immediate successful Future with a boxed value', () => {
-    expect(Future.successful('foo')).toEqual(Success('foo'));
+    expect(Future.successful('foo')).toEqual(Future(Success('foo')));
   });
 
   test('Future.unit returns an immediate successful Future with undefined', () => {
-    expect(Future.unit).toEqual(Success());
+    expect(Future.undefined()).toEqual(Future(Success(undefined)));
   });
 
   test('Future.failed returns an immediate failed Future with a boxed reason', () => {
-    expect(Future.failed(Error('bar'))).toEqual(Failure(Error('bar')));
+    expect(Future.failed(Error('bar'))).toEqual(Future(Failure(Error('bar'))));
   });
 });
