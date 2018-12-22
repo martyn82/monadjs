@@ -1,3 +1,3 @@
-export {Some, None, Option} from './option';
-export {Left, Right} from './either';
-export {Try, Success, Failure} from './try';
+export * from './option';
+export * from './either';
+export * from './try';

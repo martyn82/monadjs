@@ -1,4 +1,6 @@
 
+const _promise = global.Promise;
+
 export default function sleep(duration) {
-  return new Promise((resolve, _) => setTimeout(_ => resolve(), duration.toMillis()));
+  return new _promise((resolve, _) => setTimeout(_ => resolve(), duration.toMillis()));
 }

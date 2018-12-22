@@ -1,7 +1,7 @@
-import {Future} from 'concurrent/future';
-import {Success, Failure} from 'utils';
+import {Future} from './future';
+import {Success, Failure} from './../utils';
 
-const _promise = window.Promise;
+const _promise = global.Promise;
 
 export const Promise = () => {
   return Promise.apply();

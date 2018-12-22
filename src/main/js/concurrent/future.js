@@ -1,6 +1,6 @@
-import {Success, Failure, Some, None} from 'utils';
+import {Success, Failure, Some, None} from './../utils';
 
-const _promise = window.Promise;
+const _promise = global.Promise;
 
 export const Future = (f) => {
   if (typeof f === 'undefined') {
