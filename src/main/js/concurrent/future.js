@@ -55,39 +55,12 @@ Future.apply = (f) => {
     }
 
     async ready(duration) {
-      let timer;
-      async function wait(atMost) {
-        function timeout(duration) {
-          return new _promise((_, reject) => {
-            timer = setTimeout(() => {
-              reject(Error('Futures timed out after ' + duration));
-            }, duration);
-          });
-        }
-        return await timeout(atMost);
-      }
-
-      this.onComplete(() => clearTimeout(timer));
-      await _promise.race([this._promise, wait(duration)]);
-
+      await wait.call(this, duration);
       return this;
     }
 
     async result(duration) {
-      let timer;
-      async function wait(atMost) {
-        function timeout(duration) {
-          return new _promise((_, reject) => {
-            timer = setTimeout(() => {
-              reject(Error('Futures timed out after ' + duration));
-            }, duration);
-          });
-        }
-        return await timeout(atMost);
-      }
-
-      this.onComplete(() => clearTimeout(timer));
-      await _promise.race([this._promise, wait(duration)]);
+      await wait.call(this, duration);
       return this.value.map(v => v.get()).getOrElse(undefined);
     }
   }
@@ -142,3 +115,21 @@ Future.apply = (f) => {
 
   return _future(f);
 };
+
+async function wait(atMost) {
+  let timer;
+  async function _wait(atMost) {
+    function timeout(duration) {
+      return new _promise((_, reject) => {
+        timer = setTimeout(() => {
+          reject(Error('Futures timed out after ' + duration));
+        }, duration);
+      });
+    }
+
+    return await timeout(atMost);
+  }
+
+  this.onComplete(() => clearTimeout(timer));
+  return await _promise.race([this._promise, _wait(atMost)]);
+}
