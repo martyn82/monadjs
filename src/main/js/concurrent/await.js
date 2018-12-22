@@ -1,6 +1,4 @@
 
-const _promise = window.Promise;
-
 export const Await = {
   ready: (awaitable, atMost) => {
     if (typeof awaitable.ready === 'function') {

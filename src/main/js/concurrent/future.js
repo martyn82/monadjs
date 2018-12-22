@@ -124,7 +124,7 @@ async function wait(atMost) {
       return new _promise((_, reject) => {
         timer = setTimeout(() => {
           reject(Error('Futures timed out after ' + duration));
-        }, duration);
+        }, duration.toMillis());
       });
     }
 

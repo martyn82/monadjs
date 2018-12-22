@@ -1,4 +1,5 @@
 import {sleep, Future} from 'concurrent';
+import {default as _} from 'concurrent/duration/implicits';
 import {Success, Failure, Some, None} from 'utils';
 
 describe('Future', () => {
@@ -125,11 +126,11 @@ describe('Future', () => {
 
   test('ready awaits the completed state of the Future and reflects it if successful', async done => {
     const f = Future(async () => {
-      await sleep(10);
+      await sleep(10..milliseconds);
       return 'foo';
     });
 
-    (await f.ready(11)).onComplete(result => {
+    (await f.ready(11..milliseconds)).onComplete(result => {
       expect(result).toEqual(Success('foo'));
       done();
     });
@@ -137,11 +138,11 @@ describe('Future', () => {
 
   test('ready awaits the completed state of the Future and reflects it if failed', async done => {
     const f = Future(async () => {
-      await sleep(10);
+      await sleep(10..milliseconds);
       throw Error('foo');
     });
 
-    (await f.ready(11)).onComplete(result => {
+    (await f.ready(11..milliseconds)).onComplete(result => {
       expect(result).toEqual(Failure(Error('foo')));
       done();
     });
@@ -151,11 +152,11 @@ describe('Future', () => {
     expect.assertions(1);
 
     const f = Future(async () => {
-      await sleep(100);
+      await sleep(100..milliseconds);
       return 'foo';
     });
 
-    const patience = 10;
+    const patience = 10..milliseconds;
 
     try {
       await f.ready(patience);
@@ -166,23 +167,23 @@ describe('Future', () => {
 
   test('result awaits the completed state of the Future and returns the result if successful', async () => {
     const f = Future(async () => {
-      await sleep(10);
+      await sleep(10..milliseconds);
       return 'foo';
     });
 
-    expect(await f.result(100)).toBe('foo');
+    expect(await f.result(100..milliseconds)).toBe('foo');
   });
 
   test('result awaits the completed state of the Future and throws an error if failed', async () => {
     expect.assertions(1);
 
     const f = Future(async () => {
-      await sleep(10);
+      await sleep(10..milliseconds);
       throw Error('foo');
     });
 
     try {
-      await f.result(100);
+      await f.result(100..milliseconds);
     } catch (e) {
       expect(e).toEqual(Error('foo'));
     }
@@ -192,11 +193,11 @@ describe('Future', () => {
     expect.assertions(1);
 
     const f = Future(async () => {
-      await sleep(100);
+      await sleep(100..milliseconds);
       return 'foo';
     });
 
-    const patience = 10;
+    const patience = 10..milliseconds;
 
     try {
       await f.result(patience);
